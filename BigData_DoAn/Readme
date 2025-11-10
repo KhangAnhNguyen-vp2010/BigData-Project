@@ -1,0 +1,150 @@
+🛫 Flight Data Realtime Dashboard & Analysis
+📘 Giới thiệu
+
+Dự án này xây dựng một hệ thống trực quan hóa và phân tích dữ liệu chuyến bay theo thời gian thực, sử dụng:
+
+-RethinkDB để lưu trữ và stream dữ liệu realtime
+
+-Streamlit để hiển thị dashboard
+
+-PySpark để phân tích và huấn luyện mô hình dự đoán số chuyến bay trong giờ kế tiếp
+
+Dự án được chia làm 3 phần chính:
+
+1. Realtime Dashboard — hiển thị dữ liệu chuyến bay đang diễn ra theo thời gian thực
+
+2. Spark Analysis Dashboard — phân tích dữ liệu chuyến bay và xu hướng theo giờ
+
+3. Flight Prediction — huấn luyện mô hình và dự đoán số chuyến bay giờ kế tiếp
+
+🧱 Cấu trúc thư mục
+BigData_DoAn/
+│
+├── analysis.py               # Phân tích dữ liệu với Spark (summary + trend)
+├── predict.py                # Huấn luyện mô hình dự đoán số chuyến bay
+├── dashboard.py              # Trang dashboard chính (Spark + Prediction)
+├── realtime_page.py          # Trang hiển thị dữ liệu realtime (RethinkDB changes)
+├── app.py                    # Điểm vào chính, quản lý các trang
+│
+├── output_flight_summary.csv # Kết quả tổng hợp top quốc gia (Spark)
+├── output_flight_trend.csv   # Kết quả xu hướng chuyến bay (Spark)
+│
+├── requirements.txt          # Danh sách thư viện cần cài
+└── README.md                 # Tài liệu hướng dẫn này
+
+⚙️ Cài đặt môi trường
+1️⃣ Clone dự án
+git clone https://github.com/<your-username>/FlightDashboard.git
+cd FlightDashboard
+
+2️⃣ Cài các thư viện cần thiết
+
+Nếu bạn đã có file requirements.txt:
+
+pip install -r requirements.txt
+
+
+hoặc nếu chưa có:
+
+pip install streamlit rethinkdb pandas plotly pyspark scikit-learn
+
+3️⃣ Khởi động RethinkDB
+rethinkdb
+
+
+Sau đó mở trình duyệt tại:
+
+http://localhost:8080
+
+
+Tạo database và table nếu chưa có:
+
+-Database: flights_db
+
+-Tables: flights
+
+🚀 Chạy ứng dụng
+
+▶️ 1. Tiến hành thu thập dữ liệu vào RethinkDB (nếu chưa có dữ liệu)
+python collector.py
+
+▶️ 2. Chạy trang chính
+streamlit run app.py
+
+▶️ 3. (Tùy chọn) Chạy phân tích dữ liệu thủ công
+python analysis.py
+
+▶️ 4. (Tùy chọn) Chạy dự đoán thủ công
+python predict.py
+
+🧠 Các tính năng chính
+🛰️ 1. Realtime Flights Page
+
+-Lấy dữ liệu trực tiếp từ RethinkDB (flights table)
+
+-Hiển thị top quốc gia có nhiều chuyến bay nhất
+
+-Cập nhật bản đồ vị trí máy bay realtime
+
+-Tự động reload khi có thay đổi mới trong database (sử dụng changes())
+
+📊 2. Spark Analysis Page
+
+-Phân tích dữ liệu bằng PySpark:
+
+ +Tổng hợp top quốc gia có nhiều chuyến bay nhất
+
+ +Phân tích xu hướng chuyến bay theo giờ
+
+-Cho phép bấm nút "Phân tích lại" để chạy lại analysis.py ngay trong giao diện
+
+-Hiển thị kết quả từ file CSV (output_flight_summary.csv, output_flight_trend.csv)
+
+⏰ 3. Flight Prediction Page
+
+-Sử dụng mô hình RandomForestRegressor để dự đoán số chuyến bay của giờ kế tiếp
+
+-Cho phép người dùng nhấn nút “Dự đoán ngay” để huấn luyện & dự đoán trực tiếp
+
+-Hiển thị biểu đồ dự đoán theo thời gian
+
+📂 Dữ liệu mẫu
+
+Dữ liệu được lấy từ flights table trong RethinkDB.
+Ví dụ dữ liệu đã qua xử lý lưu trong output_flight_trend.csv:
+
+hour_slot,flights_per_hour
+2025-10-10 13:00:00,33000
+2025-10-10 14:00:00,14000
+
+🧩 Yêu cầu hệ thống
+Thành phần	Phiên bản khuyến nghị
+-Python	>= 3.10
+-RethinkDB	>= 2.4
+-Streamlit	>= 1.38
+-PySpark	>= 3.5
+-Plotly	>= 5.20
+💬 Ghi chú thêm
+
+-Nếu bạn dùng Windows, đảm bảo đã cài đặt Java (JDK) trước khi dùng PySpark.
+
+-Nếu gặp lỗi Unicode trong console, hãy dùng mã lệnh sau trong script:
+
+import sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+
+-Nên tạo môi trường ảo để tránh xung đột thư viện:
+
+python -m venv venv
+venv\Scripts\activate
+
+✨ Demo ý tưởng
+      Trang	         |   Mô tả
+-Realtime Flights	 | Hiển thị dữ liệu chuyến bay trực tiếp
+-Spark Analysis	     | Phân tích & thống kê dữ liệu bằng PySpark
+-Flight Prediction	 | Dự đoán số chuyến bay giờ kế tiếp
+👨‍💻 Tác giả
+
+Cười Tại — Dự án Big Data Realtime với RethinkDB + PySpark + Streamlit.
+Nếu bạn thấy dự án hữu ích, hãy ⭐️ nó trên GitHub nhé!
